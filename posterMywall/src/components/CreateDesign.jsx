@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const CreateDesign = () => {
+  const fileInputRef = useRef(null)
   const navigate = useNavigate();
   const [design, setDesign] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
@@ -10,6 +11,10 @@ const CreateDesign = () => {
     sales: "",
     uses: "",
   });
+
+  const triggerFileInput = () => {
+    fileInputRef.current.click();
+  };
 
   const handleImageToUpload = (e) => {
     setDesign(e.target.files[0]);
@@ -78,7 +83,8 @@ const CreateDesign = () => {
   return (
     <div>
       <form className='flex flex-col items-center justify-center' onSubmit={handleUpload}>
-        <input type='file' onChange={handleImageToUpload} placeholder='Upload image' required />
+        <input type='file' className='hidden' ref={fileInputRef}  onChange={handleImageToUpload} placeholder='Upload image' required />
+        <button onClick={triggerFileInput}>Upload file</button>
         <input className='hidden' name='name' value={formData.name} type='text' onChange={handleInputChange} placeholder='Design Name' />
         <input className='hidden' type='text' name='sales' value={formData.sales} onChange={handleInputChange} placeholder='Sales' />
         <input className='hidden' type='text' name='uses' value={formData.uses} onChange={handleInputChange} placeholder='Uses' />

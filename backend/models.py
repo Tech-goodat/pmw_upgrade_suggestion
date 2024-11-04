@@ -1,7 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy import MetaData
-
+from sqlalchemy.orm import validates
 metadata=MetaData(
     naming_convention={
          "ix": "ix_%(column_0_label)s",
@@ -49,5 +49,25 @@ class Caption(db.Model, SerializerMixin):
     def __repr__(self):
         return f'{self.name}, {self.id}'
     
+class User(db.Model, SerializerMixin):
+    __tablename__='users'
+    
+    id=db.Column(db.Integer, primary_key=True)
+    first_name=db.Column(db.String)
+    last_name=db.Column(db.String)
+    username=db.Column(db.String)
+    email=db.Column(db.String)
+    nationality=db.Column(db.String)
+    password=db.Column(db.String)
+    
+    @validates('email')
+    def validate_email(self,key, email):
+        
+        if not email.endswith ('@gmail.com'):
+            raise ValueError("email address must end with @gmail.com")
+        return email
+    
+    def __repr__(self):
+        return f'<User {self.id}, {self.first_name}, {self.last_name}, {self.username}, {self.email}, {self.nationality} />'
 
     
